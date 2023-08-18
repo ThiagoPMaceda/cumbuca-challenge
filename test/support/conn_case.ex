@@ -28,6 +28,9 @@ defmodule CumbucaWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import CumbucaWeb.ConnCase
+      import Cumbuca.Factory
+
+      alias Cumbuca.Repo
     end
   end
 

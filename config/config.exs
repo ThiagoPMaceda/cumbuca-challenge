@@ -9,7 +9,7 @@ import Config
 
 config :cumbuca,
   ecto_repos: [Cumbuca.Repo],
-  generators: [binary_id: true]
+  generators: [binary_id: true, api_prefix: "/api/v1"]
 
 # Configures the endpoint
 config :cumbuca, CumbucaWeb.Endpoint,
@@ -28,6 +28,10 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :cumbuca, Cumbuca.Repo,
+  migration_primary_key: [type: :binary_id],
+  migration_foreign_key: [type: :binary_id]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

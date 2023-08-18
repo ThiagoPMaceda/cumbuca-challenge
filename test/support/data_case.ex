@@ -23,6 +23,7 @@ defmodule Cumbuca.DataCase do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
+      import Cumbuca.Factory
       import Cumbuca.DataCase
     end
   end
