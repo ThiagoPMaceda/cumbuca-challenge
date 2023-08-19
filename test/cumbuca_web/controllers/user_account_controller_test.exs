@@ -8,7 +8,8 @@ defmodule CumbucaWeb.UserAccountControllerTest do
     balance: 2_459_900,
     name: "Joe",
     surname: "Doe",
-    cpf: "11111111111"
+    cpf: "099.341.822-89",
+    password: "Zt8#ad1"
   }
 
   setup %{conn: conn} do
@@ -25,7 +26,7 @@ defmodule CumbucaWeb.UserAccountControllerTest do
       assert %{
                "account_id" => account_id,
                "balance" => 2_459_900,
-               "cpf" => "11111111111",
+               "cpf" => "09934182289",
                "name" => "Joe",
                "surname" => "Doe",
                "user_id" => user_id
@@ -39,7 +40,7 @@ defmodule CumbucaWeb.UserAccountControllerTest do
 
       assert Repo.get_by(User,
                id: user_id,
-               cpf: @create_attrs.cpf,
+               cpf: "09934182289",
                name: @create_attrs.name,
                surname: @create_attrs.surname
              )
@@ -54,7 +55,8 @@ defmodule CumbucaWeb.UserAccountControllerTest do
       assert response == %{
                "errors" => %{
                  "cpf" => ["can't be blank"],
-                 "surname" => ["can't be blank"]
+                 "surname" => ["can't be blank"],
+                 "password" => ["can't be blank"]
                },
                "message" => "Unprocessable entity"
              }
@@ -86,7 +88,7 @@ defmodule CumbucaWeb.UserAccountControllerTest do
     end
 
     test "renders errors when cpf is already taken", %{conn: conn} do
-      insert!(:user, cpf: @create_attrs.cpf)
+      insert!(:user, cpf: "09934182289")
 
       response =
         conn

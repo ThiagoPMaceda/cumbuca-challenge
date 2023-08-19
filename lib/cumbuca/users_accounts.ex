@@ -23,7 +23,7 @@ defmodule Cumbuca.UsersAccounts do
   """
 
   def create_user_and_account(user_and_account) do
-    user = Map.take(user_and_account, ["cpf", "name", "surname"])
+    user = Map.take(user_and_account, ["cpf", "name", "surname", "password"])
     balance_value = Map.get(user_and_account, "balance")
 
     Multi.new()

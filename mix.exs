@@ -49,7 +49,10 @@ defmodule Cumbuca.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.10", only: :test}
+      {:excoveralls, "~> 0.10", only: :test},
+      {:guardian, "~> 2.0"},
+      {:argon2_elixir, "~> 3.0"},
+      {:brcpfcnpj, "~> 1.0.0"}
     ]
   end
 

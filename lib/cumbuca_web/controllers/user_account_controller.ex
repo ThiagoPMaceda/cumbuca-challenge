@@ -1,17 +1,7 @@
 defmodule CumbucaWeb.UserAccountController do
   use CumbucaWeb, :controller
-  use Params
 
   alias Cumbuca.UsersAccounts
-
-  defparams(
-    user_account_params(%{
-      name!: :string,
-      surname!: :string,
-      balance!: :integer,
-      cpf!: :string
-    })
-  )
 
   action_fallback CumbucaWeb.FallbackController
 

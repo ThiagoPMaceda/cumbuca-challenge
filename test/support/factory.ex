@@ -5,7 +5,13 @@ defmodule Cumbuca.Factory do
   alias Cumbuca.Accounts.Account
 
   def build(:user) do
-    %User{cpf: "hello world", name: "Joe", surname: "Doe"}
+    %User{
+      cpf: "414.666.631-70",
+      name: "Joe",
+      surname: "Doe",
+      password: "1a2b3c#0",
+      password_hash: Argon2.hash_pwd_salt("1a2b3c#0")
+    }
   end
 
   def build(:account) do

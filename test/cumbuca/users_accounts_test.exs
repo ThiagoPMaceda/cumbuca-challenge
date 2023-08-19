@@ -6,10 +6,11 @@ defmodule Cumbuca.UsersAccountsTest do
   alias Cumbuca.Users.User
 
   @valid_attrs %{
-    "cpf" => "11111111111",
+    "cpf" => "584.602.439-40",
     "name" => "Jane",
     "surname" => "Doe",
-    "balance" => 234_500
+    "balance" => 234_500,
+    "password" => "z0y9#Ee1"
   }
 
   describe "users accounts" do
@@ -17,7 +18,7 @@ defmodule Cumbuca.UsersAccountsTest do
       {:ok, %{account: %Account{} = account, user: %User{} = user}} =
         UsersAccounts.create_user_and_account(@valid_attrs)
 
-      assert user.cpf == @valid_attrs["cpf"]
+      assert user.cpf == "58460243940"
       assert user.name == @valid_attrs["name"]
       assert user.surname == @valid_attrs["surname"]
 
@@ -26,7 +27,7 @@ defmodule Cumbuca.UsersAccountsTest do
     end
 
     test "create_user_and_account/1 with duplicate cpf returns error changeset" do
-      insert!(:user, cpf: "11111111111")
+      insert!(:user, cpf: "58460243940")
       {:error, changeset} = UsersAccounts.create_user_and_account(@valid_attrs)
 
       assert errors_on(changeset) == %{cpf: ["has already been taken"]}
