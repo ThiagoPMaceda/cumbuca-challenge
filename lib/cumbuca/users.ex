@@ -25,4 +25,9 @@ defmodule Cumbuca.Users do
     |> User.changeset(attrs)
     |> Repo.insert()
   end
+
+  def get_user_by_cpf(cpf) do
+    formatted_cpf = String.replace(cpf, ~r/[^0-9]/, "")
+    Repo.get_by(User, cpf: formatted_cpf)
+  end
 end

@@ -2,13 +2,12 @@ defmodule Cumbuca.UsersTest do
   use Cumbuca.DataCase
 
   alias Cumbuca.Users
+  alias Cumbuca.Users.User
 
-  describe "users" do
-    alias Cumbuca.Users.User
-
+  describe "create_user/1" do
     @attrs %{cpf: "346.455.440-63", name: "Joe", surname: "Doe", password: "a1Z@#do"}
 
-    test "create_user/1 with valid data creates a user" do
+    test "valid data creates a user" do
       assert {:ok, %User{} = user} = Users.create_user(@attrs)
       assert user.cpf == "34645544063"
       assert user.name == "Joe"
@@ -17,7 +16,7 @@ defmodule Cumbuca.UsersTest do
       assert {:ok, _} = Argon2.check_pass(user, user.password)
     end
 
-    test "create_user/1 with invalid data returns error changeset" do
+    test "invalid data returns error changeset" do
       assert {:error, changeset} = Users.create_user(%{})
 
       assert errors_on(changeset) == %{
@@ -28,7 +27,7 @@ defmodule Cumbuca.UsersTest do
              }
     end
 
-    test "create_user/1 with duplicate cpf returns error changeset" do
+    test "duplicate cpf returns error changeset" do
       insert!(:user, cpf: "34645544063")
 
       assert {:error, changeset} = Users.create_user(@attrs)
@@ -36,7 +35,7 @@ defmodule Cumbuca.UsersTest do
       assert errors_on(changeset) == %{cpf: ["has already been taken"]}
     end
 
-    test "create_user/1 with invalid password returns error changeset" do
+    test "invalid password returns error changeset" do
       assert {:error, changeset} = Users.create_user(%{@attrs | password: "abc"})
 
       assert errors_on(changeset) == %{
@@ -46,6 +45,19 @@ defmodule Cumbuca.UsersTest do
                  "at least five characters"
                ]
              }
+    end
+  end
+
+  describe "get_user_by_id/1" do
+    test "returns a user if cpf is found" do
+      cpf = "34645544063"
+      insert!(:user, cpf: cpf)
+
+      assert %User{cpf: ^cpf} = Users.get_user_by_cpf(cpf)
+    end
+
+    test "returns nil if cpf is not found" do
+      assert is_nil(Users.get_user_by_cpf("123")) == true
     end
   end
 end

@@ -1,8 +1,6 @@
 defmodule CumbucaWeb.Router do
   use CumbucaWeb, :router
 
-  alias UserAccountController
-
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -11,5 +9,7 @@ defmodule CumbucaWeb.Router do
     pipe_through :api
 
     post "/users-accounts", UserAccountController, :create
+
+    post "/login", LoginController, :create
   end
 end

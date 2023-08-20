@@ -21,6 +21,13 @@ defmodule CumbucaWeb.FallbackController do
     |> render(:"404")
   end
 
+  def call(conn, {:error, "invalid credentials"}) do
+    conn
+    |> put_status(:unauthorized)
+    |> put_view(json: CumbucaWeb.ErrorJSON)
+    |> render(:"401", errors: "invalid credentials")
+  end
+
   defp translate_error({msg, opts}) do
     Enum.reduce(opts, msg, fn {key, value}, acc ->
       String.replace(acc, "%{#{key}}", fn _ -> to_string(value) end)
