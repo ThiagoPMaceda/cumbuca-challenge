@@ -1,19 +1,19 @@
-defmodule Cumbuca.Accounts.Account do
+defmodule Cumbuca.Accounts.Schemas.Account do
   @moduledoc """
   The Account schema.
   """
   use Cumbuca.Schema
 
-  alias Cumbuca.Users.User
+  alias Cumbuca.Accounts.Schemas.User
 
   schema "accounts" do
     field :balance, :integer
 
-    belongs_to :user, User
+    has_one :user, User
     timestamps()
   end
 
-  @required [:balance, :user_id]
+  @required [:balance]
 
   @doc false
   def changeset(account, attrs) do
@@ -21,6 +21,6 @@ defmodule Cumbuca.Accounts.Account do
     |> cast(attrs, @required)
     |> validate_required(@required)
     |> validate_number(:balance, greater_than: 0)
-    |> foreign_key_constraint(:user_id)
+    |> cast_assoc(:user, required: true, with: &User.changeset/2)
   end
 end

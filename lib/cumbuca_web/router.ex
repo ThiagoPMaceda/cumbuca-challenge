@@ -8,7 +8,7 @@ defmodule CumbucaWeb.Router do
   scope "/api/v1", CumbucaWeb do
     pipe_through :api
 
-    post "/users-accounts", UserAccountController, :create
+    post "/sign-in", SignInController, :create
 
     post "/login", LoginController, :create
   end

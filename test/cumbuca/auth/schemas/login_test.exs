@@ -1,7 +1,7 @@
-defmodule Cumbuca.Accounts.LoginTest do
+defmodule Cumbuca.Accounts.Schemas.LoginTest do
   use Cumbuca.DataCase
 
-  alias Cumbuca.Accounts.Login
+  alias Cumbuca.Auth.Schemas.Login
 
   describe "changeset/2" do
     test "with valid data returns valid changeset" do

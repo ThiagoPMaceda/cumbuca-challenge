@@ -1,8 +1,7 @@
 defmodule Cumbuca.Factory do
   @moduledoc false
   alias Cumbuca.Repo
-  alias Cumbuca.Users.User
-  alias Cumbuca.Accounts.Account
+  alias Cumbuca.Accounts.Schemas.{Account, User}
 
   def build(:user) do
     %User{
@@ -15,13 +14,20 @@ defmodule Cumbuca.Factory do
   end
 
   def build(:account) do
-    %Account{balance: 50_000, user_id: Ecto.UUID.generate()}
+    %Account{balance: 50_000}
   end
 
   def build(:user_with_account) do
-    user = insert!(:user)
+    account = insert!(:account)
 
-    %Account{balance: 100_000, user_id: user.id}
+    %User{
+      cpf: "414.666.631-70",
+      name: "Joe",
+      surname: "Doe",
+      password: "1a2b3c#0",
+      password_hash: Argon2.hash_pwd_salt("1a2b3c#0"),
+      account_id: account.id
+    }
   end
 
   def build(factory_name, attributes) do

@@ -14,7 +14,7 @@ defmodule CumbucaWeb.LoginControllerTest do
 
   describe "login" do
     test "renders token when data is valid", %{conn: conn} do
-      insert!(:user,
+      insert!(:user_with_account,
         cpf: "09934182289",
         password: @create_attrs.password,
         password_hash: Argon2.hash_pwd_salt(@create_attrs.password)

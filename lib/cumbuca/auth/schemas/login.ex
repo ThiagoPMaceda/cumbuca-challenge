@@ -1,4 +1,4 @@
-defmodule Cumbuca.Accounts.Login do
+defmodule Cumbuca.Auth.Schemas.Login do
   @moduledoc """
   The Login schema.
   """

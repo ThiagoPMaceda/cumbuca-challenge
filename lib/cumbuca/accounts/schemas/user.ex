@@ -1,10 +1,10 @@
-defmodule Cumbuca.Users.User do
+defmodule Cumbuca.Accounts.Schemas.User do
   @moduledoc """
   The User schema.
   """
   use Cumbuca.Schema
 
-  alias Cumbuca.Accounts.Account
+  alias Cumbuca.Accounts.Schemas.Account
 
   schema "users" do
     field :cpf, :string
@@ -13,23 +13,25 @@ defmodule Cumbuca.Users.User do
     field :password, :string, virtual: true
     field :password_hash, :string
 
-    has_one :accounts, Account
+    belongs_to :account, Account
 
     timestamps()
   end
 
   @required [:name, :surname, :cpf, :password]
+  @optional [:account_id]
 
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, @required)
+    |> cast(attrs, @required ++ @optional)
     |> validate_required(@required)
     |> validate_cpf()
     |> update_change(:cpf, &String.replace(&1, ~r/[^0-9]/, ""))
     |> validate_password()
     |> put_pass_hash()
     |> unique_constraint(:cpf)
+    |> foreign_key_constraint(:account_id)
   end
 
   defp validate_password(changeset) do
