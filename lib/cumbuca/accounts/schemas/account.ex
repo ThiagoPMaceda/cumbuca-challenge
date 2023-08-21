@@ -5,11 +5,13 @@ defmodule Cumbuca.Accounts.Schemas.Account do
   use Cumbuca.Schema
 
   alias Cumbuca.Accounts.Schemas.User
+  alias Cumbuca.Transactions.Schemas.Transaction
 
   schema "accounts" do
     field :balance, :integer
 
     has_one :user, User
+    has_many :transactions, Transaction
     timestamps()
   end
 

@@ -52,7 +52,8 @@ defmodule Cumbuca.MixProject do
       {:excoveralls, "~> 0.10", only: :test},
       {:guardian, "~> 2.0"},
       {:argon2_elixir, "~> 3.0"},
-      {:brcpfcnpj, "~> 1.0.0"}
+      {:brcpfcnpj, "~> 1.0.0"},
+      {:strong_params, "~> 0.2.3"}
     ]
   end
 

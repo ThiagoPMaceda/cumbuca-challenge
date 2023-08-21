@@ -26,6 +26,12 @@ defmodule Cumbuca.Accounts do
     |> Repo.insert()
   end
 
+  def get_by_ids(id_list) do
+    Account
+    |> where([a], a.id in ^id_list)
+    |> Repo.all()
+  end
+
   def get_user_by_cpf(cpf) do
     formatted_cpf = String.replace(cpf, ~r/[^0-9]/, "")
     Repo.get_by(User, cpf: formatted_cpf)

@@ -21,6 +21,20 @@ defmodule CumbucaWeb.FallbackController do
     |> render(:"404")
   end
 
+  def call(conn, {:error, :insufficient_funds}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(json: CumbucaWeb.ErrorJSON)
+    |> render(:"422", errors: "insufficient funds to make transaction")
+  end
+
+  def call(conn, {:error, :account_not_found}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(json: CumbucaWeb.ErrorJSON)
+    |> render(:"422", errors: "sender or receiver account not found")
+  end
+
   def call(conn, {:error, "invalid credentials"}) do
     conn
     |> put_status(:unauthorized)

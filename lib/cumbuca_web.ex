@@ -41,6 +41,8 @@ defmodule CumbucaWeb do
         formats: [:html, :json],
         layouts: [html: CumbucaWeb.Layouts]
 
+      use StrongParams
+
       import Plug.Conn
       import CumbucaWeb.Gettext
 

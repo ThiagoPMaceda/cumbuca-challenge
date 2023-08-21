@@ -11,5 +11,7 @@ defmodule CumbucaWeb.Router do
     post "/sign-in", SignInController, :create
 
     post "/login", LoginController, :create
+
+    post "/transactions", TransactionController, :create
   end
 end

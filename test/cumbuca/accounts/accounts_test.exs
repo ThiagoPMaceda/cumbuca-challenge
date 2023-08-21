@@ -50,4 +50,25 @@ defmodule Cumbuca.AccountsTest do
              }
     end
   end
+
+  describe "get_by_ids/1" do
+    test "returns list of accounts if ids are found" do
+      %{id: account_one_id} = insert!(:account)
+      %{id: account_two_id} = insert!(:account)
+      %{id: account_three_id} = insert!(:account)
+      id_list = [account_one_id, account_two_id, account_three_id]
+
+      accounts = Accounts.get_by_ids(id_list)
+
+      assert [
+               %Account{id: ^account_one_id},
+               %Account{id: ^account_two_id},
+               %Account{id: ^account_three_id}
+             ] = accounts
+    end
+
+    test "returns empty list if ids are not found" do
+      assert Accounts.get_by_ids([Ecto.UUID.generate()]) == []
+    end
+  end
 end
