@@ -26,6 +26,21 @@ defmodule Cumbuca.Transactions.ChargebackTest do
       assert recipient_after_chargeback.balance == 19000
     end
 
+    test "returns an error if the transaction has already been subjected to a chargeback" do
+      %{id: sender_id} = insert!(:account, balance: 20000)
+      %{id: recipient_id} = insert!(:account, balance: 100_00)
+
+      transaction_to_chargeback =
+        insert!(:transaction,
+          sender_id: sender_id,
+          recipient_id: recipient_id,
+          chargeback: true
+        )
+
+      assert {:error, :chargeback_already_processed} ==
+               Chargeback.process(%{transaction_id: transaction_to_chargeback.id})
+    end
+
     test "returns error when recipient does not have enough funds" do
       %{id: sender_id} = insert!(:account, balance: 20000)
       %{id: recipient_id} = insert!(:account, balance: 100_00)

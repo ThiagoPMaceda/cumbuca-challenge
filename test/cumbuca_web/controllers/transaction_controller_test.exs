@@ -164,6 +164,33 @@ defmodule CumbucaWeb.TransactionControllerTest do
              }
     end
 
+    test "renders an error message when a chargeback has already been processed for the transaction",
+         %{
+           account_one: account_one,
+           account_two: account_two,
+           conn: conn
+         } do
+      user = insert!(:user_with_account)
+      %{id: sender_id} = account_one
+      %{id: recipient_id} = account_two
+
+      %{id: transaction_id} =
+        insert!(:transaction, sender_id: sender_id, recipient_id: recipient_id, chargeback: true)
+
+      attrs = %{"transaction_id" => transaction_id}
+
+      response =
+        conn
+        |> put_authorization(user)
+        |> post(~p"/api/v1/transactions/chargeback", attrs)
+        |> json_response(422)
+
+      assert response == %{
+               "errors" => "The current transaction has already been chargebacked",
+               "message" => "Unprocessable entity"
+             }
+    end
+
     test "renders error message when transaction id is not found", %{conn: conn} do
       user = insert!(:user_with_account)
       attrs = %{"transaction_id" => Ecto.UUID.generate()}

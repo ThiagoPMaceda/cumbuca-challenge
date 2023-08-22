@@ -24,6 +24,13 @@ defmodule CumbucaWeb.FallbackController do
     |> render(:"401", errors: "invalid signature")
   end
 
+  def call(conn, {:error, :chargeback_already_processed}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(json: CumbucaWeb.ErrorJSON)
+    |> render(:"422", errors: "The current transaction has already been chargebacked")
+  end
+
   def call(conn, {:error, "invalid credentials"}) do
     conn
     |> put_status(:unauthorized)

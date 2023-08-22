@@ -4,6 +4,7 @@ defmodule Cumbuca.Transactions.Chargeback do
   alias Ecto.{Changeset, Multi}
   alias Cumbuca.{Accounts, Repo, Transactions}
   alias Cumbuca.Accounts.Schemas.Account
+  alias Cumbuca.Transactions.Schemas.Transaction
 
   def process(%{transaction_id: transaction_id}) do
     Multi.new()
@@ -25,8 +26,14 @@ defmodule Cumbuca.Transactions.Chargeback do
 
   defp get_transaction_by_id(transaction_id) do
     case Transactions.get_transaction_by_id(transaction_id) do
-      nil -> {:error, :transaction_not_found}
-      transaction -> {:ok, transaction}
+      nil ->
+        {:error, :transaction_not_found}
+
+      %Transaction{chargeback: true} ->
+        {:error, :chargeback_already_processed}
+
+      %Transaction{} = transaction ->
+        {:ok, transaction}
     end
   end
 
