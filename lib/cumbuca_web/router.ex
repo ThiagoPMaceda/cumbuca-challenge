@@ -23,5 +23,7 @@ defmodule CumbucaWeb.Router do
       resources "/", TransactionController, only: [:index, :create]
       post "/chargeback", TransactionController, :chargeback
     end
+
+    get "/accounts", AccountController, :balance
   end
 end

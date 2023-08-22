@@ -83,4 +83,36 @@ defmodule Cumbuca.AccountsTest do
       assert is_nil(Accounts.get_account_by_id(Ecto.UUID.generate()))
     end
   end
+
+  describe "get_user_by_id/1" do
+    test "returns a user if user with id is found" do
+      %{id: user_id} = insert!(:user_with_account)
+
+      %User{id: ^user_id} = assert Accounts.get_user_by_id(user_id)
+    end
+
+    test "returns nil if user with id is not found" do
+      assert is_nil(Accounts.get_user_by_id(Ecto.UUID.generate()))
+    end
+  end
+
+  describe "get_user_by_cpf/1" do
+    test "formats CPF and returns a user if user with CPF is found" do
+      %{cpf: user_cpf} = insert!(:user_with_account, cpf: "34645544063")
+
+      %User{cpf: ^user_cpf} = assert Accounts.get_user_by_cpf(user_cpf)
+    end
+
+    test "returns nil if user with id is not found" do
+      assert is_nil(Accounts.get_user_by_cpf("34645544063"))
+    end
+  end
+
+  describe "get_account_by_user_id/1" do
+    test "returns a account if account with user id associated is found" do
+      %{id: user_id, account_id: account_id} = insert!(:user_with_account)
+
+      %Account{id: ^account_id} = assert Accounts.get_account_by_user_id(user_id)
+    end
+  end
 end

@@ -44,4 +44,10 @@ defmodule Cumbuca.Accounts do
     formatted_cpf = String.replace(cpf, ~r/[^0-9]/, "")
     Repo.get_by(User, cpf: formatted_cpf)
   end
+
+  def get_account_by_user_id(user_id) do
+    %User{account_id: account_id} = get_user_by_id(user_id)
+
+    get_account_by_id(account_id)
+  end
 end
