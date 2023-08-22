@@ -1,5 +1,5 @@
 defmodule CumbucaWeb.SignInControllerTest do
-  use CumbucaWeb.ConnCase
+  use CumbucaWeb.ConnCase, async: true
 
   alias Cumbuca.Accounts.Schemas.{Account, User}
 

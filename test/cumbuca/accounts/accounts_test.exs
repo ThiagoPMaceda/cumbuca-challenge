@@ -1,5 +1,5 @@
 defmodule Cumbuca.AccountsTest do
-  use Cumbuca.DataCase
+  use Cumbuca.DataCase, async: true
 
   alias Cumbuca.Accounts
   alias Cumbuca.Accounts.Schemas.{Account, User}

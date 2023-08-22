@@ -1,5 +1,5 @@
 defmodule Cumbuca.Transactions.ChargebackTest do
-  use Cumbuca.DataCase
+  use Cumbuca.DataCase, async: true
 
   alias Cumbuca.Transactions.Chargeback
   alias Cumbuca.Accounts.Schemas.Account

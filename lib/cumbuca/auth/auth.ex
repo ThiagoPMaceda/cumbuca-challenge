@@ -2,7 +2,7 @@ defmodule Cumbuca.Auth do
   alias Cumbuca.Accounts
   alias Cumbuca.Accounts.Schemas.User
   alias Cumbuca.Auth.Schemas.Login
-  alias Cumbuca.Guardian
+  alias CumbucaWeb.Guardian
   alias Ecto.Changeset
 
   def login_with_cpf_and_password(params) do

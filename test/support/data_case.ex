@@ -19,6 +19,7 @@ defmodule Cumbuca.DataCase do
   using do
     quote do
       alias Cumbuca.Repo
+      alias Ecto.UUID
 
       import Ecto
       import Ecto.Changeset

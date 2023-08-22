@@ -1,5 +1,5 @@
 defmodule Cumbuca.Accounts.Schemas.LoginTest do
-  use Cumbuca.DataCase
+  use Cumbuca.DataCase, async: true
 
   alias Cumbuca.Auth.Schemas.Login
 

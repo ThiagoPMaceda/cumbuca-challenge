@@ -1,7 +1,7 @@
 defmodule CumbucaWeb.LoginControllerTest do
-  use CumbucaWeb.ConnCase
+  use CumbucaWeb.ConnCase, async: true
 
-  alias Cumbuca.Guardian
+  alias CumbucaWeb.Guardian
 
   @create_attrs %{
     password: "a1b2cz#T",
@@ -14,11 +14,12 @@ defmodule CumbucaWeb.LoginControllerTest do
 
   describe "login" do
     test "renders token when data is valid", %{conn: conn} do
-      insert!(:user_with_account,
-        cpf: "09934182289",
-        password: @create_attrs.password,
-        password_hash: Argon2.hash_pwd_salt(@create_attrs.password)
-      )
+      %{id: user_id} =
+        insert!(:user_with_account,
+          cpf: "09934182289",
+          password: @create_attrs.password,
+          password_hash: Argon2.hash_pwd_salt(@create_attrs.password)
+        )
 
       response =
         conn
@@ -27,8 +28,7 @@ defmodule CumbucaWeb.LoginControllerTest do
 
       %{"token" => token} = response
 
-      assert {:ok, %{"typ" => "access", "sub" => "09934182289"}} =
-               Guardian.decode_and_verify(token)
+      assert {:ok, %{"typ" => "access", "sub" => ^user_id}} = Guardian.decode_and_verify(token)
     end
 
     test "renders errors when user or password are invalid", %{conn: conn} do

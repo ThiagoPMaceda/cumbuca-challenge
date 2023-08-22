@@ -32,9 +32,9 @@ config :phoenix, :json_library, Jason
 config :cumbuca, Cumbuca.Repo,
   migration_primary_key: [type: :binary_id],
   migration_foreign_key: [type: :binary_id],
-  migration_timestamps: [type: :utc_datetime]
+  migration_timestamps: [type: :utc_datetime_usec]
 
-config :cumbuca, Cumbuca.Guardian,
+config :cumbuca, CumbucaWeb.Guardian,
   issuer: "Cumbuca",
   secret_key: "VIYVaRRQX/TsLDYjAFKDUvUj+nBFWR2kiMgsYAprL09t7cB7fMUPgkvh1CZ2Qq6v"
 

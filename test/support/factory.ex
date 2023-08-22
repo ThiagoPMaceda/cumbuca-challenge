@@ -35,7 +35,11 @@ defmodule Cumbuca.Factory do
     %{id: sender_id} = insert!(:account)
     %{id: recipient_id} = insert!(:account)
 
-    %Transaction{sender_id: sender_id, recipient_id: recipient_id, amount: 10_00}
+    %Transaction{
+      sender_id: sender_id,
+      recipient_id: recipient_id,
+      amount: 10_00
+    }
   end
 
   def build(factory_name, attributes) do

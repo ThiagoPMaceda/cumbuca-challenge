@@ -1,5 +1,5 @@
 defmodule Cumbuca.TransactionsTest do
-  use Cumbuca.DataCase
+  use Cumbuca.DataCase, async: true
 
   alias Cumbuca.Accounts.Schemas.Account
   alias Cumbuca.Transactions.Schemas.Transaction
@@ -82,6 +82,53 @@ defmodule Cumbuca.TransactionsTest do
       attrs = %{sender_id: account_one.id, recipient_id: account_two.id, amount: 90_000_00}
 
       assert {:error, :insufficient_funds} = Transactions.create_transaction(attrs)
+    end
+  end
+
+  describe "get_transactions_by_interval/3" do
+    test "return ordered transactions in specified interval" do
+      %{id: user_id, account_id: account_id} = insert!(:user_with_account)
+      start_date = "2023-08-01T00:00:00.911400Z"
+      end_date = "2023-08-30T00:00:00.911400Z"
+
+      transaction_in_range_one =
+        insert!(:transaction, sender_id: account_id, inserted_at: ~U[2023-08-01T00:00:00.911400Z])
+
+      transaction_in_range_two =
+        insert!(:transaction, sender_id: account_id, inserted_at: ~U[2023-08-15T00:00:00.911400Z])
+
+      transaction_in_range_three =
+        insert!(:transaction, sender_id: account_id, inserted_at: ~U[2023-08-27T00:00:00.911400Z])
+
+      transaction_in_range_four =
+        insert!(:transaction, sender_id: account_id, inserted_at: ~U[2023-08-30T00:00:00.911400Z])
+
+      _transaction_out_of_range_one =
+        insert!(:transaction, sender_id: account_id, inserted_at: ~U[2023-10-01T00:00:00.911400Z])
+
+      _transaction_out_of_range_two =
+        insert!(:transaction, sender_id: account_id, inserted_at: ~U[2023-07-30T00:00:00.911400Z])
+
+      expected_ordered_transactions = [
+        transaction_in_range_one,
+        transaction_in_range_two,
+        transaction_in_range_three,
+        transaction_in_range_four
+      ]
+
+      assert {:ok, expected_ordered_transactions} ==
+               Transactions.get_transactions_by_interval(start_date, end_date, user_id)
+    end
+
+    test "return empty list if no transaction is found for specified interval" do
+      %{id: user_id, account_id: account_id} = insert!(:user_with_account)
+      start_date = "2023-08-01T00:00:00.911400Z"
+      end_date = "2023-08-30T00:00:00.911400Z"
+
+      _transaction_out_of_range =
+        insert!(:transaction, sender_id: account_id, inserted_at: ~U[2023-10-01T00:00:00.911400Z])
+
+      assert {:ok, []} == Transactions.get_transactions_by_interval(start_date, end_date, user_id)
     end
   end
 end

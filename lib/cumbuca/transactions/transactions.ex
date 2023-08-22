@@ -2,7 +2,7 @@ defmodule Cumbuca.Transactions do
   alias Cumbuca.Transactions.Chargeback
   alias Cumbuca.Transactions.Schemas.Transaction
   alias Cumbuca.Accounts
-  alias Cumbuca.Accounts.Schemas.Account
+  alias Cumbuca.Accounts.Schemas.{Account, User}
   alias Cumbuca.Repo
   alias Ecto.Multi
 
@@ -11,6 +11,20 @@ defmodule Cumbuca.Transactions do
   def get_transaction_by_id(id), do: Repo.get(Transaction, id)
 
   defdelegate chargeback(params), to: Chargeback, as: :process
+
+  def get_transactions_by_interval(start_date, end_date, user_id) do
+    %User{account_id: account_id} = Accounts.get_user_by_id(user_id)
+
+    transactions =
+      Transaction
+      |> where([t], t.sender_id == ^account_id)
+      |> where([t], t.inserted_at >= ^start_date)
+      |> where([t], t.inserted_at <= ^end_date)
+      |> order_by([t], asc: t.inserted_at)
+      |> Repo.all()
+
+    {:ok, transactions}
+  end
 
   def create_transaction(%{sender_id: sender_id, recipient_id: recipient_id, amount: amount}) do
     sender_update_query =

@@ -1,4 +1,8 @@
 defmodule CumbucaWeb.TransactionJSON do
+  def index(%{transactions: transcations}) do
+    %{transcations: for(transaction <- transcations, do: show(%{transaction: transaction}))}
+  end
+
   def show(%{transaction: transaction}) do
     %{
       id: transaction.id,

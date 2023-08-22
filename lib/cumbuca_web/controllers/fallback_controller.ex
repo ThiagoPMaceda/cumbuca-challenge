@@ -6,6 +6,8 @@ defmodule CumbucaWeb.FallbackController do
   alias Ecto.Changeset
   alias StrongParams.Error
 
+  def auth_error(conn, {type, reason}, _opts), do: call(conn, {type, reason})
+
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     errors = Changeset.traverse_errors(changeset, &translate_error/1)
 
@@ -13,6 +15,30 @@ defmodule CumbucaWeb.FallbackController do
     |> put_status(:unprocessable_entity)
     |> put_view(json: CumbucaWeb.ErrorJSON)
     |> render(:"422", errors: errors)
+  end
+
+  def call(conn, {:error, :invalid_signature}) do
+    conn
+    |> put_status(:unauthorized)
+    |> put_view(json: CumbucaWeb.ErrorJSON)
+    |> render(:"401", errors: "invalid signature")
+  end
+
+  def call(conn, {:error, "invalid credentials"}) do
+    conn
+    |> put_status(:unauthorized)
+    |> put_view(json: CumbucaWeb.ErrorJSON)
+    |> render(:"401", errors: "invalid credentials")
+  end
+
+  def call(conn, {:unauthenticated, :unauthenticated}) do
+    conn
+    |> put_status(:unauthorized)
+    |> put_view(json: CumbucaWeb.ErrorJSON)
+    |> render(:"401",
+      errors:
+        "An authorized JWT must be provided within the authorization header using the Bearer realm."
+    )
   end
 
   def call(conn, {:error, :not_found}) do
@@ -48,13 +74,6 @@ defmodule CumbucaWeb.FallbackController do
     |> put_status(:unprocessable_entity)
     |> put_view(json: CumbucaWeb.ErrorJSON)
     |> render(:"422", errors: "sender or receiver account not found")
-  end
-
-  def call(conn, {:error, "invalid credentials"}) do
-    conn
-    |> put_status(:unauthorized)
-    |> put_view(json: CumbucaWeb.ErrorJSON)
-    |> render(:"401", errors: "invalid credentials")
   end
 
   def call(conn, %Error{errors: errors}) do

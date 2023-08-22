@@ -1,5 +1,5 @@
 defmodule Cumbuca.Transactions.Schemas.TransactionTest do
-  use Cumbuca.DataCase
+  use Cumbuca.DataCase, async: true
 
   alias Cumbuca.Transactions.Schemas.Transaction
 

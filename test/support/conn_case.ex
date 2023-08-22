@@ -1,4 +1,6 @@
 defmodule CumbucaWeb.ConnCase do
+  alias Cumbuca.Accounts.Schemas.User
+
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -31,6 +33,12 @@ defmodule CumbucaWeb.ConnCase do
       import Cumbuca.Factory
 
       alias Cumbuca.Repo
+
+      defp put_authorization(conn, %User{id: id} = user) do
+        {:ok, token, _claims} = CumbucaWeb.Guardian.encode_and_sign(user, %{"typ" => "access"})
+
+        put_req_header(conn, "authorization", "Bearer #{token}")
+      end
     end
   end
 
