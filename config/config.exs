@@ -31,7 +31,8 @@ config :phoenix, :json_library, Jason
 
 config :cumbuca, Cumbuca.Repo,
   migration_primary_key: [type: :binary_id],
-  migration_foreign_key: [type: :binary_id]
+  migration_foreign_key: [type: :binary_id],
+  migration_timestamps: [type: :utc_datetime]
 
 config :cumbuca, Cumbuca.Guardian,
   issuer: "Cumbuca",

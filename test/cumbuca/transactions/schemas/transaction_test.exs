@@ -3,7 +3,13 @@ defmodule Cumbuca.Transactions.Schemas.TransactionTest do
 
   alias Cumbuca.Transactions.Schemas.Transaction
 
-  @attrs %{sender_id: Ecto.UUID.generate(), recipient_id: Ecto.UUID.generate(), amount: 100_000}
+  @attrs %{
+    sender_id: Ecto.UUID.generate(),
+    recipient_id: Ecto.UUID.generate(),
+    amount: 100_000,
+    chargeback: true,
+    chargeback_date: DateTime.utc_now()
+  }
 
   describe "changeset/2" do
     test "with valid data returns valid changeset" do

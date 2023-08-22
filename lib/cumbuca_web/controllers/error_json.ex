@@ -1,4 +1,11 @@
 defmodule CumbucaWeb.ErrorJSON do
+  def render("400.json", %{errors: errors}) do
+    %{
+      "message" => "Bad request",
+      "errors" => errors
+    }
+  end
+
   def render("401.json", %{errors: errors}) do
     %{
       "message" => "Unauthorized",

@@ -71,4 +71,16 @@ defmodule Cumbuca.AccountsTest do
       assert Accounts.get_by_ids([Ecto.UUID.generate()]) == []
     end
   end
+
+  describe "get_account_by_id/1" do
+    test "returns a account if account with id is found" do
+      %{id: account_id} = insert!(:account)
+
+      %Account{id: ^account_id} = assert Accounts.get_account_by_id(account_id)
+    end
+
+    test "returns nil if account with id is not found" do
+      assert is_nil(Accounts.get_account_by_id(Ecto.UUID.generate()))
+    end
+  end
 end

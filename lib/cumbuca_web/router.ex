@@ -9,9 +9,8 @@ defmodule CumbucaWeb.Router do
     pipe_through :api
 
     post "/sign-in", SignInController, :create
-
     post "/login", LoginController, :create
-
     post "/transactions", TransactionController, :create
+    post "/transactions/chargeback", TransactionController, :chargeback
   end
 end
