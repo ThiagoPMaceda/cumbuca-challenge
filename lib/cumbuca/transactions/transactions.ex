@@ -38,12 +38,7 @@ defmodule Cumbuca.Transactions do
         update: [inc: [balance: ^(+amount)]]
 
     Multi.new()
-    |> Multi.run(
-      :retrieved_accounts,
-      fn _repo, _multi ->
-        {:ok, Accounts.get_by_ids([sender_id, recipient_id])}
-      end
-    )
+    |> Multi.run(:retrieved_accounts, &retrieved_accounts(&1, &2, recipient_id, sender_id))
     |> Multi.run(:check_sender_funds, &check_sender_funds(&1, &2, amount))
     |> Multi.update_all(:recipient_update_query, recipient_update_query, [])
     |> Multi.run(:check_recipient_update_query, &check_recipient_update_query(&1, &2))
@@ -58,14 +53,22 @@ defmodule Cumbuca.Transactions do
     |> handle_multi()
   end
 
+  defp retrieved_accounts(_repo, _changes, recipient_id, sender_id) do
+    accounts = Accounts.get_by_ids([sender_id, recipient_id])
+
+    sender_account = Enum.find(accounts, &(&1.id == sender_id))
+    recipient_account = Enum.find(accounts, &(&1.id == recipient_id))
+
+    case is_nil(sender_account) || is_nil(recipient_account) do
+      true -> {:error, :account_not_found}
+      false -> {:ok, [sender_account, recipient_account]}
+    end
+  end
+
   defp check_sender_funds(_repo, %{retrieved_accounts: [sender_account, _]}, amount) do
     if sender_account.balance - amount >= 0,
       do: {:ok, nil},
       else: {:error, :insufficient_funds}
-  end
-
-  defp check_sender_funds(_repo, %{retrieved_accounts: list}, _amount) when length(list) == 0 do
-    {:error, :account_not_found}
   end
 
   defp check_recipient_update_query(

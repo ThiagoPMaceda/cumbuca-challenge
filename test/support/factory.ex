@@ -6,6 +6,7 @@ defmodule Cumbuca.Factory do
 
   def build(:user) do
     %User{
+      id: Ecto.UUID.generate(),
       cpf: "414.666.631-70",
       name: "Joe",
       surname: "Doe",
@@ -15,13 +16,14 @@ defmodule Cumbuca.Factory do
   end
 
   def build(:account) do
-    %Account{balance: 50_000}
+    %Account{id: Ecto.UUID.generate(), balance: 50_000}
   end
 
   def build(:user_with_account) do
     account = insert!(:account)
 
     %User{
+      id: Ecto.UUID.generate(),
       cpf: "414.666.631-70",
       name: "Joe",
       surname: "Doe",
@@ -36,6 +38,7 @@ defmodule Cumbuca.Factory do
     %{id: recipient_id} = insert!(:account)
 
     %Transaction{
+      id: Ecto.UUID.generate(),
       sender_id: sender_id,
       recipient_id: recipient_id,
       amount: 10_00

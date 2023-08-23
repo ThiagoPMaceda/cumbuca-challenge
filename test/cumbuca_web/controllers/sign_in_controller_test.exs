@@ -13,10 +13,6 @@ defmodule CumbucaWeb.SignInControllerTest do
     }
   }
 
-  setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
-  end
-
   describe "create user account" do
     test "renders user and account when data is valid", %{conn: conn} do
       response =

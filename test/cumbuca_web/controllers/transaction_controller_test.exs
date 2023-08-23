@@ -3,10 +3,6 @@ defmodule CumbucaWeb.TransactionControllerTest do
 
   alias Cumbuca.Accounts.Schemas.Account
 
-  setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
-  end
-
   setup do
     account_one = insert!(:account, balance: 1_500_35)
     account_two = insert!(:account, balance: 300_00)
@@ -325,3 +321,4 @@ defmodule CumbucaWeb.TransactionControllerTest do
     end
   end
 end
+

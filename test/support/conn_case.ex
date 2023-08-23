@@ -44,6 +44,10 @@ defmodule CumbucaWeb.ConnCase do
 
   setup tags do
     Cumbuca.DataCase.setup_sandbox(tags)
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+
+    {:ok,
+     conn:
+       Phoenix.ConnTest.build_conn()
+       |> Plug.Conn.put_req_header("content-type", "application/json")}
   end
 end

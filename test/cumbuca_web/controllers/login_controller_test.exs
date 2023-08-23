@@ -8,10 +8,6 @@ defmodule CumbucaWeb.LoginControllerTest do
     cpf: "099.341.822-89"
   }
 
-  setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
-  end
-
   describe "login" do
     test "renders token when data is valid", %{conn: conn} do
       %{id: user_id} =

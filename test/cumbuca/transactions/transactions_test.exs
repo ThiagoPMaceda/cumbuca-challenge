@@ -5,18 +5,10 @@ defmodule Cumbuca.TransactionsTest do
   alias Cumbuca.Transactions.Schemas.Transaction
   alias Cumbuca.Transactions
 
-  setup do
-    account_one = insert!(:account, balance: 200_00)
-    account_two = insert!(:account, balance: 200_00)
-
-    {:ok, %{account_one: account_one, account_two: account_two}}
-  end
-
   describe "create_transaction/1" do
-    test "creates a transaction with valid data", %{
-      account_one: account_one,
-      account_two: account_two
-    } do
+    test "creates a transaction with valid data" do
+      account_one = insert!(:account, balance: 200_00)
+      account_two = insert!(:account, balance: 200_00)
       attrs = %{sender_id: account_one.id, recipient_id: account_two.id, amount: 10_00}
 
       assert {:ok, %Transaction{sender_id: sender_id, recipient_id: recipient_id}} =
@@ -29,30 +21,28 @@ defmodule Cumbuca.TransactionsTest do
       assert recipient.balance == 21_000
     end
 
-    test "calculations are correct with multiple transactions", %{
-      account_one: account_one,
-      account_two: account_two
-    } do
-      transaction_one = %{sender_id: account_one.id, recipient_id: account_two.id, amount: 50_00}
-      transaction_two = %{sender_id: account_one.id, recipient_id: account_two.id, amount: 37_50}
+    test "calculations are correct with multiple transactions" do
+      %{id: account_one_id} = insert!(:account, balance: 200_00)
+      %{id: account_two_id} = insert!(:account, balance: 200_00)
+
+      transaction_one = %{sender_id: account_one_id, recipient_id: account_two_id, amount: 50_00}
+      transaction_two = %{sender_id: account_one_id, recipient_id: account_two_id, amount: 37_50}
 
       transaction_three = %{
-        sender_id: account_one.id,
-        recipient_id: account_two.id,
+        sender_id: account_one_id,
+        recipient_id: account_two_id,
         amount: 20_00
       }
 
       transaction_four = %{
-        sender_id: account_two.id,
-        recipient_id: account_one.id,
+        sender_id: account_two_id,
+        recipient_id: account_one_id,
         amount: 100_00
       }
 
-      transaction_five = %{sender_id: account_one.id, recipient_id: account_two.id, amount: 10_00}
+      transaction_five = %{sender_id: account_one_id, recipient_id: account_two_id, amount: 10_00}
 
-      assert {:ok, %Transaction{sender_id: account_one_id, recipient_id: account_two_id}} =
-               Transactions.create_transaction(transaction_one)
-
+      assert {:ok, _transaction_one} = Transactions.create_transaction(transaction_one)
       assert {:ok, _transaction_two} = Transactions.create_transaction(transaction_two)
       assert {:ok, _transaction_three} = Transactions.create_transaction(transaction_three)
       assert {:ok, _transaction_four} = Transactions.create_transaction(transaction_four)
@@ -75,10 +65,9 @@ defmodule Cumbuca.TransactionsTest do
       assert {:error, :account_not_found} == Transactions.create_transaction(attrs)
     end
 
-    test "retuns error if sender account does not have sufficient funds", %{
-      account_one: account_one,
-      account_two: account_two
-    } do
+    test "retuns error if sender account does not have sufficient funds" do
+      account_one = insert!(:account, balance: 200_00, id: Ecto.UUID.generate())
+      account_two = insert!(:account, balance: 200_00, id: Ecto.UUID.generate())
       attrs = %{sender_id: account_one.id, recipient_id: account_two.id, amount: 90_000_00}
 
       assert {:error, :insufficient_funds} = Transactions.create_transaction(attrs)

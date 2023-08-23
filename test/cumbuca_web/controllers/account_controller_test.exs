@@ -1,10 +1,6 @@
 defmodule CumbucaWeb.AccountControllerTest do
   use CumbucaWeb.ConnCase, async: true
 
-  setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
-  end
-
   describe "POST /api/v1/accounts" do
     test "renders balance for user using token", %{conn: conn} do
       %{id: account_id, balance: balance} = insert!(:account, balance: 123_00)
