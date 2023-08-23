@@ -8,7 +8,8 @@ defmodule CumbucaWeb.TransactionJSON do
       id: transaction.id,
       sender_id: transaction.sender_id,
       recipient_id: transaction.recipient_id,
-      amount: transaction.amount
+      amount: transaction.amount,
+      insert_at: transaction.inserted_at
     }
   end
 

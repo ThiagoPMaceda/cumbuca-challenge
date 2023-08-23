@@ -114,17 +114,16 @@ Estorna uma transação, com tanto que obedeça as regras de negócio estabeleci
 
 
 ### Busca de transações por data
-`GET http://localhost:4000/api/v1/transactions`
+`GET http://localhost:4000/api/v1/transactions?start_date&end_date`
 
 Retorna as transações feitas no intervalo de data informado, o usuário é retornado através do token, essas transações são retornadas em ordem cronológica.
+
+Esses dados devem ser enviados nos paramêtros da query
 
 
 #### Dados necessários
 ```json
-{
-  "start_date": "2023-08-01T00:00:00.911400Z",
-  "end_date": "2023-08-30T00:00:00.911400Z"
-}
+http://localhost:4000/api/v1/transactions?start_date=2023-08-01&end_date=2023-08-30
 ```
 
 ### Visualização de saldo

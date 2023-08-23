@@ -77,8 +77,8 @@ defmodule Cumbuca.TransactionsTest do
   describe "get_transactions_by_interval/3" do
     test "return ordered transactions in specified interval" do
       %{id: user_id, account_id: account_id} = insert!(:user_with_account)
-      start_date = "2023-08-01T00:00:00.911400Z"
-      end_date = "2023-08-30T00:00:00.911400Z"
+      start_date = "2023-08-01"
+      end_date = "2023-08-30"
 
       transaction_in_range_one =
         insert!(:transaction, sender_id: account_id, inserted_at: ~U[2023-08-01T00:00:00.911400Z])
@@ -111,8 +111,8 @@ defmodule Cumbuca.TransactionsTest do
 
     test "return empty list if no transaction is found for specified interval" do
       %{id: user_id, account_id: account_id} = insert!(:user_with_account)
-      start_date = "2023-08-01T00:00:00.911400Z"
-      end_date = "2023-08-30T00:00:00.911400Z"
+      start_date = "2023-08-01"
+      end_date = "2023-08-30"
 
       _transaction_out_of_range =
         insert!(:transaction, sender_id: account_id, inserted_at: ~U[2023-10-01T00:00:00.911400Z])

@@ -258,8 +258,8 @@ defmodule CumbucaWeb.TransactionControllerTest do
       user = %{account_id: account_id} = insert!(:user_with_account)
 
       attrs = %{
-        "start_date" => "2023-08-01T00:00:00.911400Z",
-        "end_date" => "2023-08-30T00:00:00.911400Z"
+        "start_date" => "2023-08-01",
+        "end_date" => "2023-08-30"
       }
 
       %{id: first_transaction_id} =
@@ -323,8 +323,8 @@ defmodule CumbucaWeb.TransactionControllerTest do
       )
 
       attrs = %{
-        "start_date" => "2023-08-01T00:00:00.911400Z",
-        "end_date" => "2023-08-30T00:00:00.911400Z"
+        "start_date" => "2023-08-01",
+        "end_date" => "2023-08-30"
       }
 
       response =
@@ -338,8 +338,8 @@ defmodule CumbucaWeb.TransactionControllerTest do
 
     test "renders error when token is missing from request", %{conn: conn} do
       attrs = %{
-        "start_date" => "2023-08-01T00:00:00.911400Z",
-        "end_date" => "2023-08-30T00:00:00.911400Z"
+        "start_date" => "2023-08-01",
+        "end_date" => "2023-08-30"
       }
 
       response =
@@ -353,6 +353,21 @@ defmodule CumbucaWeb.TransactionControllerTest do
                "message" => "Unauthorized"
              }
     end
+
+    test "renders error when params are missing", %{conn: conn} do
+      user = insert!(:user_with_account)
+
+      response =
+        conn
+        |> put_authorization(user)
+        |> get(~p"/api/v1/transactions")
+        |> json_response(400)
+
+      assert response == %{
+               "errors" =>
+                 "it's necessary to send `end_date` and `start_date` in the query params with the following format: 'yyyy-mm-dd'",
+               "message" => "Bad request"
+             }
+    end
   end
 end
-

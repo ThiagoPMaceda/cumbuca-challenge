@@ -15,11 +15,17 @@ defmodule Cumbuca.Transactions do
   def get_transactions_by_interval(start_date, end_date, user_id) do
     %User{account_id: account_id} = Accounts.get_user_by_id(user_id)
 
+    start_utc_usec_string = "T00:00:00.00000Z"
+    end_utc_usec_string = "T23:59:59.999999Z"
+
+    start_date_utc_string = start_date <> start_utc_usec_string
+    end_date_utc_string = end_date <> end_utc_usec_string
+
     transactions =
       Transaction
       |> where([t], t.sender_id == ^account_id)
-      |> where([t], t.inserted_at >= ^start_date)
-      |> where([t], t.inserted_at <= ^end_date)
+      |> where([t], t.inserted_at >= ^start_date_utc_string)
+      |> where([t], t.inserted_at <= ^end_date_utc_string)
       |> order_by([t], asc: t.inserted_at)
       |> Repo.all()
 

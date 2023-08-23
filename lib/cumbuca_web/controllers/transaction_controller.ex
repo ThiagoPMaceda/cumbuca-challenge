@@ -5,14 +5,12 @@ defmodule CumbucaWeb.TransactionController do
   alias Ecto.UUID
   alias CumbucaWeb.Guardian.Plug
 
-  filter_for(:index, required: [:start_date, :end_date])
   filter_for(:create, required: [:sender_id, :recipient_id, :amount])
-
   filter_for(:chargeback, required: [transaction_id: UUID])
 
   action_fallback(CumbucaWeb.FallbackController)
 
-  def index(conn, %{start_date: start_date, end_date: end_date}) do
+  def index(conn, %{"end_date" => end_date, "start_date" => start_date}) do
     %{id: user_id} = Plug.current_resource(conn)
 
     with {:ok, transactions} <-
@@ -21,6 +19,16 @@ defmodule CumbucaWeb.TransactionController do
       |> put_status(:ok)
       |> render(:index, transactions: transactions)
     end
+  end
+
+  def index(conn, _params) do
+    conn
+    |> put_status(:bad_request)
+    |> put_view(json: CumbucaWeb.ErrorJSON)
+    |> render(:"400",
+      errors:
+        "it's necessary to send `end_date` and `start_date` in the query params with the following format: 'yyyy-mm-dd'"
+    )
   end
 
   def create(conn, params) do
