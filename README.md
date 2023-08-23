@@ -43,7 +43,7 @@ Acesse o aplicativo no seu navegador em http://localhost:4000.
 Essas são as rotas disponíveis dentro do projeto:
 
 ### Cadastro de conta
-http://localhost:4000/api/v1/sign-in
+POST http://localhost:4000/api/v1/sign-in
 Cadastra uma conta, o que gera um registro de usuários na tabela `users` e uma nova conta na tabela `accounts`.
 
 #### Dados necessários
@@ -69,7 +69,7 @@ Algumas regras desse endpoint:
   - Ter de ter um digito ou caractere especial;
 
 ### Autenticação
-http://localhost:4000/api/v1/login
+POST http://localhost:4000/api/v1/login
 Autentica um usuário retornando um token que deve ser usado nos demais endpoints.
 
 #### Dados necessários
@@ -81,6 +81,7 @@ Autentica um usuário retornando um token que deve ser usado nos demais endpoint
 ```
 
 ### Cadastro de transação
+POST http://localhost:4000/api/v1/transactions
 Cadastra uma transação entre dois usuários, com tanto que obedeça as regras de negócio estabelecidas, sendo essa:
 
 - Uma transação só deve ser realizada caso haja saldo suficiente na conta do usuário para realizá-la.
@@ -95,6 +96,7 @@ Cadastra uma transação entre dois usuários, com tanto que obedeça as regras 
 ```
 
 ### Estorno de transação
+POST http://localhost:4000/api/v1/transactions/chargeback
 Estorna uma transação, com tanto que obedeça as regras de negócio estabelecidas, sendo essa:
 
 - A transação pode ser estornada apenas uma vez.
@@ -109,6 +111,7 @@ Estorna uma transação, com tanto que obedeça as regras de negócio estabeleci
 
 
 ### Busca de transações por data
+GET http://localhost:4000/api/v1/transactions
 Retorna as transações feitas no intervalo de data informado, o usuário é retornado através do token, essas transações são retornadas em ordem cronológica.
 
 
@@ -121,6 +124,7 @@ Retorna as transações feitas no intervalo de data informado, o usuário é ret
 ```
 
 ### Visualização de saldo
+GET http://localhost:4000/api/v1/accounts
 Visualiza o saldo do usuário utilizando o token informado.
 
 ## Rodando Testes
