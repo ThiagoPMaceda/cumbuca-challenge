@@ -19,7 +19,7 @@ defmodule CumbucaWeb.TransactionControllerTest do
       %{id: account_one_id, balance: account_one_balance} = account_one
       %{id: account_two_id, balance: account_two_balance} = account_two
 
-      create_attrs = %{
+      attrs = %{
         "sender_id" => account_one_id,
         "recipient_id" => account_two_id,
         "amount" => 1_000_00
@@ -30,7 +30,7 @@ defmodule CumbucaWeb.TransactionControllerTest do
       response =
         conn
         |> put_authorization(user)
-        |> post(~p"/api/v1/transactions", create_attrs)
+        |> post(~p"/api/v1/transactions", attrs)
         |> json_response(201)
 
       assert %{
@@ -52,7 +52,7 @@ defmodule CumbucaWeb.TransactionControllerTest do
       %{id: account_one_id} = account_one
       %{id: account_two_id} = account_two
 
-      create_attrs = %{
+      attrs = %{
         "sender_id" => account_one_id,
         "recipient_id" => account_two_id,
         "amount" => 91_000_00
@@ -63,7 +63,7 @@ defmodule CumbucaWeb.TransactionControllerTest do
       response =
         conn
         |> put_authorization(user)
-        |> post(~p"/api/v1/transactions", create_attrs)
+        |> post(~p"/api/v1/transactions", attrs)
         |> json_response(422)
 
       assert response == %{
@@ -75,7 +75,7 @@ defmodule CumbucaWeb.TransactionControllerTest do
     test "renders error if any of the account are not found", %{
       conn: conn
     } do
-      create_attrs = %{
+      attrs = %{
         "sender_id" => Ecto.UUID.generate(),
         "recipient_id" => Ecto.UUID.generate(),
         "amount" => 500
@@ -86,12 +86,31 @@ defmodule CumbucaWeb.TransactionControllerTest do
       response =
         conn
         |> put_authorization(user)
-        |> post(~p"/api/v1/transactions", create_attrs)
+        |> post(~p"/api/v1/transactions", attrs)
         |> json_response(422)
 
       assert response == %{
                "errors" => "sender or receiver account not found",
                "message" => "Unprocessable entity"
+             }
+    end
+
+    test "renders error when token is missing from request", %{conn: conn} do
+      attrs = %{
+        "sender_id" => Ecto.UUID.generate(),
+        "recipient_id" => Ecto.UUID.generate(),
+        "amount" => 500
+      }
+
+      response =
+        conn
+        |> post(~p"/api/v1/transactions", attrs)
+        |> json_response(401)
+
+      assert response == %{
+               "errors" =>
+                 "An authorized JWT must be provided within the authorization header using the Bearer realm.",
+               "message" => "Unauthorized"
              }
     end
   end
@@ -215,6 +234,21 @@ defmodule CumbucaWeb.TransactionControllerTest do
       assert response == %{
                "errors" => %{"transaction_id" => "is required"},
                "message" => "Bad request"
+             }
+    end
+
+    test "renders error when token is missing from request", %{conn: conn} do
+      attrs = %{"transaction_id" => Ecto.UUID.generate()}
+
+      response =
+        conn
+        |> post(~p"/api/v1/transactions/chargeback", attrs)
+        |> json_response(401)
+
+      assert response == %{
+               "errors" =>
+                 "An authorized JWT must be provided within the authorization header using the Bearer realm.",
+               "message" => "Unauthorized"
              }
     end
   end

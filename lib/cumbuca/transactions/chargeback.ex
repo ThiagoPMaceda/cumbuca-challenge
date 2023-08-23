@@ -9,8 +9,10 @@ defmodule Cumbuca.Transactions.Chargeback do
   def process(%{transaction_id: transaction_id}) do
     Multi.new()
     |> Multi.run(:transaction, fn _r, _c -> get_transaction_by_id(transaction_id) end)
-    |> Multi.run(:accounts, fn _repo, %{transaction: transaction} ->
-      {:ok, Accounts.get_by_ids([transaction.sender_id, transaction.recipient_id])}
+    |> Multi.run(:accounts, fn _repo,
+                               %{transaction: %{sender_id: sender_id, recipient_id: recipient_id}} ->
+      id_list = [sender_id, recipient_id]
+      Accounts.get_sender_and_recipient_accounts(id_list, sender_id, recipient_id)
     end)
     |> Multi.run(:check_recipient_funds, &check_recipient_funds(&1, &2))
     |> Multi.update_all(:recipient_update_query, &update_query(&1, :recipient), [])

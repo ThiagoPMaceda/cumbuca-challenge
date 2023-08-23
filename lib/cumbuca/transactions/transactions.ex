@@ -54,15 +54,8 @@ defmodule Cumbuca.Transactions do
   end
 
   defp retrieved_accounts(_repo, _changes, recipient_id, sender_id) do
-    accounts = Accounts.get_by_ids([sender_id, recipient_id])
-
-    sender_account = Enum.find(accounts, &(&1.id == sender_id))
-    recipient_account = Enum.find(accounts, &(&1.id == recipient_id))
-
-    case is_nil(sender_account) || is_nil(recipient_account) do
-      true -> {:error, :account_not_found}
-      false -> {:ok, [sender_account, recipient_account]}
-    end
+    id_list = [sender_id, recipient_id]
+    Accounts.get_sender_and_recipient_accounts(id_list, sender_id, recipient_id)
   end
 
   defp check_sender_funds(_repo, %{retrieved_accounts: [sender_account, _]}, amount) do

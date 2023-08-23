@@ -32,6 +32,21 @@ defmodule Cumbuca.Accounts do
     |> Repo.all()
   end
 
+  def get_sender_and_recipient_accounts(id_list, sender_id, recipient_id) do
+    accounts =
+      Account
+      |> where([a], a.id in ^id_list)
+      |> Repo.all()
+
+    sender_account = Enum.find(accounts, &(&1.id == sender_id))
+    recipient_account = Enum.find(accounts, &(&1.id == recipient_id))
+
+    case is_nil(sender_account) || is_nil(recipient_account) do
+      true -> {:error, :account_not_found}
+      false -> {:ok, [sender_account, recipient_account]}
+    end
+  end
+
   def get_account_by_id(account_id) do
     Repo.get(Account, account_id)
   end

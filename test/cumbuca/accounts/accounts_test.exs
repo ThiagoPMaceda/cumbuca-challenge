@@ -115,4 +115,40 @@ defmodule Cumbuca.AccountsTest do
       %Account{id: ^account_id} = assert Accounts.get_account_by_user_id(user_id)
     end
   end
+
+  describe "get_sender_and_recipient_accounts/3" do
+    test "returns a :ok and a list of accounts when accounts are found" do
+      %{id: sender_id} = insert!(:account)
+      %{id: recipient_id} = insert!(:account)
+      id_list = [sender_id, recipient_id]
+
+      result = Accounts.get_sender_and_recipient_accounts(id_list, sender_id, recipient_id)
+
+      assert {:ok, [%Account{id: ^sender_id}, %Account{id: ^recipient_id}]} = result
+    end
+
+    test "returns a :error if either account is not found" do
+      %{id: sender_id} = insert!(:account)
+      %{id: recipient_id} = insert!(:account)
+      id_list_without_recipient_id = [sender_id, Ecto.UUID.generate()]
+      id_list_without_sender_id = [Ecto.UUID.generate(), recipient_id]
+
+      result_one =
+        Accounts.get_sender_and_recipient_accounts(
+          id_list_without_sender_id,
+          sender_id,
+          recipient_id
+        )
+
+      result_two =
+        Accounts.get_sender_and_recipient_accounts(
+          id_list_without_recipient_id,
+          sender_id,
+          recipient_id
+        )
+
+      assert {:error, :account_not_found} == result_one
+      assert {:error, :account_not_found} == result_two
+    end
+  end
 end
