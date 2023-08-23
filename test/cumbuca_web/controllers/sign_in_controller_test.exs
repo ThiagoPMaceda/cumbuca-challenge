@@ -46,30 +46,20 @@ defmodule CumbucaWeb.SignInControllerTest do
     test "renders errors when necessary data to create user is missing", %{conn: conn} do
       response =
         conn
-        |> post(~p"/api/v1/sign-in", %{@create_attrs | user: %{surname: "Doe"}})
-        |> json_response(422)
+        |> post(~p"/api/v1/sign-in", %{})
+        |> json_response(400)
 
       assert response == %{
                "errors" => %{
                  "user" => %{
-                   "cpf" => ["can't be blank"],
-                   "name" => ["can't be blank"],
-                   "password" => ["can't be blank"]
-                 }
+                   "cpf" => "is required",
+                   "name" => "is required",
+                   "password" => "is required",
+                   "surname" => "is required"
+                 },
+                 "balance" => "is required"
                },
-               "message" => "Unprocessable entity"
-             }
-    end
-
-    test "renders errors when necessary data to create account is missing", %{conn: conn} do
-      response =
-        conn
-        |> post(~p"/api/v1/sign-in", Map.drop(@create_attrs, [:balance]))
-        |> json_response(422)
-
-      assert response == %{
-               "errors" => %{"balance" => ["can't be blank"]},
-               "message" => "Unprocessable entity"
+               "message" => "Bad request"
              }
     end
 

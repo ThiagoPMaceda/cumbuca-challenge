@@ -3,6 +3,8 @@ defmodule CumbucaWeb.LoginController do
 
   alias Cumbuca.Auth
 
+  filter_for(:create, required: [:cpf, :password])
+
   action_fallback CumbucaWeb.FallbackController
 
   def create(conn, params) do

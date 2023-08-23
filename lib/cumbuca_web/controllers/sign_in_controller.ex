@@ -3,6 +3,18 @@ defmodule CumbucaWeb.SignInController do
 
   alias Cumbuca.Accounts
 
+  @required_sign_in_params [
+    :balance,
+    user: [
+      :name,
+      :surname,
+      :cpf,
+      :password
+    ]
+  ]
+
+  filter_for(:create, required: @required_sign_in_params)
+
   action_fallback CumbucaWeb.FallbackController
 
   def create(conn, params) do

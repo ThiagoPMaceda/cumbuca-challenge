@@ -43,11 +43,11 @@ defmodule CumbucaWeb.LoginControllerTest do
       response =
         conn
         |> post(~p"/api/v1/login", %{})
-        |> json_response(422)
+        |> json_response(400)
 
       assert response == %{
-               "errors" => %{"cpf" => ["can't be blank"], "password" => ["can't be blank"]},
-               "message" => "Unprocessable entity"
+               "errors" => %{"cpf" => "is required", "password" => "is required"},
+               "message" => "Bad request"
              }
     end
   end

@@ -5,6 +5,7 @@ defmodule Cumbuca.Accounts.Schemas.User do
   use Cumbuca.Schema
 
   alias Cumbuca.Accounts.Schemas.Account
+  alias Cumbuca.Auth.Token
 
   schema "users" do
     field :cpf, :string
@@ -45,7 +46,7 @@ defmodule Cumbuca.Accounts.Schemas.User do
   end
 
   defp put_pass_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
-    change(changeset, Argon2.add_hash(password))
+    change(changeset, Token.hash_password(password))
   end
 
   defp put_pass_hash(changeset), do: changeset

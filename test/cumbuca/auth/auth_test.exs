@@ -9,7 +9,7 @@ defmodule Cumbuca.AuthTest do
       password = "a1b8P#29"
       password_hash = Argon2.hash_pwd_salt(password)
       cpf = "34645544063"
-      attrs = %{"cpf" => cpf, "password" => password}
+      attrs = %{cpf: cpf, password: password}
 
       %{id: user_id} =
         insert!(:user_with_account, cpf: cpf, password: password, password_hash: password_hash)
@@ -22,18 +22,12 @@ defmodule Cumbuca.AuthTest do
       password = "a1b8P#29"
       password_hash = Argon2.hash_pwd_salt("123")
       cpf = "34645544063"
-      attrs = %{"cpf" => cpf, "password" => password}
+      attrs = %{cpf: cpf, password: password}
 
       insert!(:user_with_account, cpf: cpf, password: password, password_hash: password_hash)
 
       assert {:error, "invalid credentials"} ==
                Auth.login_with_cpf_and_password(attrs)
-    end
-
-    test "returns a changeset error if data is invalid or missing" do
-      {:error, changeset} = Auth.login_with_cpf_and_password(%{})
-
-      assert errors_on(changeset) == %{cpf: ["can't be blank"], password: ["can't be blank"]}
     end
   end
 end
