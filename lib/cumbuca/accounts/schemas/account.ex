@@ -11,7 +11,7 @@ defmodule Cumbuca.Accounts.Schemas.Account do
     field :balance, :integer
 
     has_one :user, User
-    has_many :transactions, Transaction
+    has_many :transactions, Transaction, foreign_key: :sender_id
     timestamps()
   end
 
