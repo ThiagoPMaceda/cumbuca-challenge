@@ -15,31 +15,27 @@ PostgreSQL https://www.postgresql.org/download/
 ### Configuração
 Clone este repositório para sua máquina local:
 
-```
-bash
+```bash
 Copy code
 git clone https://github.com/ThiagoPMaceda/cumbuca-challenge.git
 ```
 
 Acesse o diretório do projeto:
 
-```
-bash
+```bash
 cd cumbuca-challenge 
 Instale as dependências do Elixir:
 ```
 
 Configure o projeto baixando as dependências, configurando o banco de dados e executando as migrations:
 
-```
-bash
+```bash
 mix setup
 ```
 
 Inicie o servidor Phoenix:
 
-```
-bash
+```bash
 mix phx.server
 ```
 Acesse o aplicativo no seu navegador em http://localhost:4000.
@@ -48,7 +44,6 @@ Acesse o aplicativo no seu navegador em http://localhost:4000.
 ## Rodando Testes
 Para executar os testes automatizados do projeto:
 
-```
-bash
+```bash
 mix test
 ```
