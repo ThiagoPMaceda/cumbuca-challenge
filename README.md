@@ -16,7 +16,6 @@ PostgreSQL https://www.postgresql.org/download/
 Clone este repositório para sua máquina local:
 
 ```bash
-Copy code
 git clone https://github.com/ThiagoPMaceda/cumbuca-challenge.git
 ```
 
@@ -24,7 +23,6 @@ Acesse o diretório do projeto:
 
 ```bash
 cd cumbuca-challenge 
-Instale as dependências do Elixir:
 ```
 
 Configure o projeto baixando as dependências, configurando o banco de dados e executando as migrations:
